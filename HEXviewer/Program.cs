@@ -12,7 +12,8 @@ namespace HEXviewer
         static string[] hex = new string[256];
         static void Main(string[] args)
         {
-            while(Console.WindowWidth<100||Console.WindowHeight<20)
+            Console.WriteLine("width : " + Console.WindowWidth.ToString() + "height : " + Console.WindowHeight.ToString());
+            while (Console.WindowWidth<100||Console.WindowHeight<20)
             {
                 Console.WriteLine("width : "+Console.WindowWidth.ToString()+"height : "+Console.WindowHeight.ToString());
                 Console.Write("increase the windows size then press enter.\nmin width : 100 , min height : 20");
@@ -33,28 +34,71 @@ namespace HEXviewer
                 } while (!File.Exists(fileName));
             }
             Console.Clear();
-            Console.WriteLine("file name : " + fileName);
+            Console.Title = "file name : " + fileName;
             FileStream fs = new FileStream(fileName, FileMode.Open);
-            //if(fs.Length<=15360)
+            if(fs.Length<=999999999)
             {
-                int k = 0;
-                while (fs.Position < fs.Length - 1)
+                long k = 0;
+                bool exit = false;
+                while (!exit)
                 {
-                    Console.Write(fixSize(k.ToString(), 9));
-                    for(int i = 0; i < 30; i++)
+                    Console.Clear();
+                    Console.SetCursorPosition(0, 0);
+                    //Console.Write(fixSize(k.ToString(), 9));
+                    fs.Position = k;
+                    for (int l = 0; l < Console.WindowHeight; l++)
                     {
-                        if (fs.Position < fs.Length)
-                            Console.Write(fixSize(hex[fs.ReadByte()], 3));
-                        else
-                            break;
+                        Console.Write(fixSize(fs.Position.ToString(), 9)+":");
+                        for (int i = 0; i < 30; i++)
+                        {
+                            if (fs.Position < fs.Length)
+                                Console.Write(fixSize(hex[fs.ReadByte()], 3));
+                            else
+                                break;
+                        }
+                        if (l < Console.WindowHeight - 1)
+                            Console.WriteLine();
                     }
-                    k += 30;
-                    Console.ReadLine();
+                    ConsoleKeyInfo ck = Console.ReadKey(true);
+                    if (ck.Key == ConsoleKey.DownArrow)
+                    {
+                        k += 90;
+                        if (k > fs.Length-1)
+                            k = fs.Length - 1;
+                    }
+                    else if (ck.Key == ConsoleKey.UpArrow)
+                    {
+                        k -= 90;
+                        if (k < 0)
+                            k = 0;
+                    }
+                    else if (ck.Key == ConsoleKey.Home)
+                    {
+                        k = 0;
+                    }
+                    else if (ck.Key == ConsoleKey.End)
+                    {
+                        k = fs.Length - Console.WindowHeight * 30;
+                        if (k < 0)
+                            k = 0;
+                    }
+                    else if (ck.Key == ConsoleKey.PageUp)
+                    {
+                        k -= Console.WindowHeight * 30;
+                        if (k < 0)
+                            k = 0;
+                    }
+                    else if (ck.Key == ConsoleKey.PageDown)
+                    {
+                        k += Console.WindowHeight * 30;
+                        if (k > fs.Length - 1)
+                            k = fs.Length - 1;
+                    }
                 }
             }
-            //else
+            else
             {
-                //Console.WriteLine("file is very big");
+                Console.WriteLine("file is very big");
                 Console.ReadLine();
                 System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
