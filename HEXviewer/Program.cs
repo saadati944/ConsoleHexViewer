@@ -94,6 +94,17 @@ namespace HEXviewer
                         if (k > fs.Length - 1)
                             k = fs.Length - 1;
                     }
+                    else if (ck.Key == ConsoleKey.Tab)
+                    {
+                        Console.Write("Enter byte number : ");
+                        long bn = 0;
+                        if (long.TryParse(Console.ReadLine(), out bn))
+                            if (bn < fs.Length && bn > -1)
+                            {
+
+                                k = bn;
+                            }
+                    }
                 }
             }
             else
