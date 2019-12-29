@@ -35,13 +35,26 @@ namespace HEXviewer
             Console.Clear();
             Console.WriteLine("file name : " + fileName);
             FileStream fs = new FileStream(fileName, FileMode.Open);
-            if(fs.Length<=15360)
+            //if(fs.Length<=15360)
             {
-
+                int k = 0;
+                while (fs.Position < fs.Length - 1)
+                {
+                    Console.Write(fixSize(k.ToString(), 9));
+                    for(int i = 0; i < 30; i++)
+                    {
+                        if (fs.Position < fs.Length)
+                            Console.Write(fixSize(hex[fs.ReadByte()], 3));
+                        else
+                            break;
+                    }
+                    k += 30;
+                    Console.ReadLine();
+                }
             }
-            else
+            //else
             {
-                Console.WriteLine("file is very big");
+                //Console.WriteLine("file is very big");
                 Console.ReadLine();
                 System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
@@ -56,6 +69,12 @@ namespace HEXviewer
                     hex[k] = vs[i] + vs[j];
                     k++;
                 }
+        }
+        static string fixSize(string s,int size)
+        {
+            while (s.Length < size)
+                s = " " + s;
+            return s;
         }
     }
 }
