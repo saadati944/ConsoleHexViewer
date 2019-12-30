@@ -19,6 +19,8 @@ namespace HEXviewer
                 Console.Write("increase the windows size then press enter.\nmin width : 100 , min height : 20");
                 Console.ReadLine();
             }
+            Console.Write(menu(new string[] { "item 1","item 2","item 3","item 4" },"select an item then press enter"));
+            Console.ReadLine();
             createArray();
             string fileName = "";
             if (args.Length != 0 && File.Exists(args[0])) 
@@ -117,6 +119,7 @@ namespace HEXviewer
         static string menu(string[] items,string title)
         {
             Console.Clear();
+            Console.WriteLine(title);
             for (int i = 0; i < items.Length; i++)
                 Console.WriteLine(items[i]);
             int selected = -1;
@@ -126,14 +129,14 @@ namespace HEXviewer
                 if (ck.Key == ConsoleKey.DownArrow)
                 {
                     selected++;
-                    if (selected > items.Length)
+                    if (selected > items.Length-1)
                         selected = 0;
                 }
                 else if (ck.Key == ConsoleKey.UpArrow)
                 {
                     selected--;
                     if (selected <0)
-                        selected = items.Length;
+                        selected = items.Length-1;
                 }
                 else if (ck.Key == ConsoleKey.Enter)
                 {
@@ -141,12 +144,11 @@ namespace HEXviewer
                         return "";
                     else return items[selected];
                 }
+                Console.Clear();
                 Console.WriteLine(title);
                 for (int i = 0; i < items.Length; i++)
                 {
-                    if (selected == i)
-                        Console.Write("#");
-                    Console.WriteLine(items[i]);
+                    Console.WriteLine((i==selected?"#":"")+items[i]+ (i == selected ? "#" :""));
                 }
             }
         }
