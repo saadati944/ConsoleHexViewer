@@ -11,6 +11,8 @@ namespace HEXviewer
     {
         static string[] hex = new string[256];
         static int linesPerScroll=3;
+        enum encodingMode {utf8,utf16,ascii };
+        static encodingMode encMode = encodingMode.utf16;
         static void Main(string[] args)
         {
             Console.WriteLine("width : " + Console.WindowWidth.ToString() + "height : " + Console.WindowHeight.ToString());
@@ -98,7 +100,7 @@ namespace HEXviewer
                     }
                     else if (ck.Key == ConsoleKey.Tab)
                     {
-                        switch (menu(new string[] {"back",  "goto" , "open another file", "lines per scroll" },"select an item then press enter\n"))
+                        switch (menu(new string[] {"back",  "goto" , "open another file", "lines per scroll", "Text Encoding Mode" , "Exit" },"select an item then press enter\n"))
                         {
                             case "back":
 
@@ -139,6 +141,19 @@ namespace HEXviewer
                                     linesPerScroll = ln;
                                 }
                                 break;
+                            case "Text Encoding Mode":
+                                string answer = menu(new string[] { "UTF-8", "ASCII","UTF-16" }, "select an item then press enter\n");
+                                if (answer == "UTF-8")
+                                    encMode = encodingMode.utf8;
+                                else if (answer == "ASCII")
+                                    encMode = encodingMode.utf8;
+                                else if (answer == "UTF-16")
+                                    encMode = encodingMode.utf16;
+                                break;
+                            case "Exit":
+                                fs.Close();
+                                System.Diagnostics.Process.GetCurrentProcess().Kill();
+                                break;
                         }
                     }
                 }
@@ -147,6 +162,7 @@ namespace HEXviewer
             {
                 Console.WriteLine("file is very big");
                 Console.ReadLine();
+                fs.Close();
                 System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
         }
@@ -156,7 +172,7 @@ namespace HEXviewer
             Console.WriteLine(title);
             for (int i = 0; i < items.Length; i++)
                 Console.WriteLine(items[i]);
-            int selected = -1;
+            int selected = 0;
             while (true)
             {
                 ConsoleKeyInfo ck = Console.ReadKey(true);
