@@ -10,6 +10,7 @@ namespace HEXviewer
     class Program
     {
         static string[] hex = new string[256];
+        static int linesPerScroll=3;
         static void Main(string[] args)
         {
             Console.WriteLine("width : " + Console.WindowWidth.ToString() + "height : " + Console.WindowHeight.ToString());
@@ -19,8 +20,7 @@ namespace HEXviewer
                 Console.Write("increase the windows size then press enter.\nmin width : 100 , min height : 20");
                 Console.ReadLine();
             }
-            Console.Write(menu(new string[] { "item 1","item 2","item 3","item 4" },"select an item then press enter"));
-            Console.ReadLine();
+            //menu(new string[] { "item 1","item 2","item 3","item 4" },"select an item then press enter")
             createArray();
             string fileName = "";
             if (args.Length != 0 && File.Exists(args[0])) 
@@ -36,7 +36,7 @@ namespace HEXviewer
                 } while (!File.Exists(fileName));
             }
             Console.Clear();
-            Console.Title = "file name : " + fileName;
+            Console.Title = "press tab to open menu ,file name : " + fileName;
             FileStream fs = new FileStream(fileName, FileMode.Open);
             if(fs.Length<=999999999)
             {
@@ -50,7 +50,7 @@ namespace HEXviewer
                     fs.Position = k;
                     for (int l = 0; l < Console.WindowHeight; l++)
                     {
-                        Console.Write(fixSize(fs.Position.ToString(), 9)+":");
+                        Console.Write(fixSize((fs.Position+1).ToString(), 9)+":");
                         for (int i = 0; i < 30; i++)
                         {
                             if (fs.Position < fs.Length)
@@ -64,13 +64,13 @@ namespace HEXviewer
                     ConsoleKeyInfo ck = Console.ReadKey(true);
                     if (ck.Key == ConsoleKey.DownArrow)
                     {
-                        k += 90;
+                        k += linesPerScroll*30;
                         if (k > fs.Length-1)
                             k = fs.Length - 1;
                     }
                     else if (ck.Key == ConsoleKey.UpArrow)
                     {
-                        k -= 90;
+                        k -= linesPerScroll * 30;
                         if (k < 0)
                             k = 0;
                     }
@@ -98,6 +98,36 @@ namespace HEXviewer
                     }
                     else if (ck.Key == ConsoleKey.Tab)
                     {
+                        switch (menu(new string[] {"back","goto" , "lines per scroll" },"select an item then press enter\n"))
+                        {
+                            case "back":
+
+                                break;
+                            case "goto":
+                                Console.Clear();
+                                Console.Write("Enter byte number : ");
+                                long bn = 0;
+                                if (long.TryParse(Console.ReadLine(), out bn))
+                                {
+                                    bn -= 1;
+                                    if (bn < fs.Length && bn > -1)
+                                    {
+                                        k = bn;
+                                    }
+                                }
+                                break;
+                            case "lines per scroll":
+                                Console.Clear();
+                                Console.Write("Enter a number : ");
+                                int ln = 0;
+                                if (int.TryParse(Console.ReadLine(), out ln))
+                                {
+                                    linesPerScroll = ln;
+                                }
+                                break;
+                        }
+
+                        /*
                         Console.Write("Enter byte number : ");
                         long bn = 0;
                         if (long.TryParse(Console.ReadLine(), out bn))
@@ -105,7 +135,7 @@ namespace HEXviewer
                             {
 
                                 k = bn;
-                            }
+                            }*/
                     }
                 }
             }
