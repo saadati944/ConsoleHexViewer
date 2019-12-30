@@ -114,6 +114,42 @@ namespace HEXviewer
                 System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
         }
+        static string menu(string[] items,string title)
+        {
+            Console.Clear();
+            for (int i = 0; i < items.Length; i++)
+                Console.WriteLine(items[i]);
+            int selected = -1;
+            while (true)
+            {
+                ConsoleKeyInfo ck = Console.ReadKey(true);
+                if (ck.Key == ConsoleKey.DownArrow)
+                {
+                    selected++;
+                    if (selected > items.Length)
+                        selected = 0;
+                }
+                else if (ck.Key == ConsoleKey.UpArrow)
+                {
+                    selected--;
+                    if (selected <0)
+                        selected = items.Length;
+                }
+                else if (ck.Key == ConsoleKey.Enter)
+                {
+                    if (selected == -1)
+                        return "";
+                    else return items[selected];
+                }
+                Console.WriteLine(title);
+                for (int i = 0; i < items.Length; i++)
+                {
+                    if (selected == i)
+                        Console.Write("#");
+                    Console.WriteLine(items[i]);
+                }
+            }
+        }
         static void createArray()
         {
             string[] vs = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" };
