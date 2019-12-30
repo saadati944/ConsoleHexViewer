@@ -98,7 +98,7 @@ namespace HEXviewer
                     }
                     else if (ck.Key == ConsoleKey.Tab)
                     {
-                        switch (menu(new string[] {"back","goto" , "lines per scroll" },"select an item then press enter\n"))
+                        switch (menu(new string[] {"back",  "goto" , "open another file", "lines per scroll" },"select an item then press enter\n"))
                         {
                             case "back":
 
@@ -116,6 +116,20 @@ namespace HEXviewer
                                     }
                                 }
                                 break;
+                            case "open another file":
+                                string fname = "";
+                                Console.Clear();
+                                do
+                                {
+                                    Console.Write("Enter file name : ");
+                                    fname = Console.ReadLine();
+                                } while (!File.Exists(fname));
+                                fileName = fname;
+                                fs.Close();
+                                fs = new FileStream(fileName, FileMode.Open);
+                                Console.Title = "press tab to open menu ,file name : " + fileName;
+                                k = 0;
+                                break;
                             case "lines per scroll":
                                 Console.Clear();
                                 Console.Write("Enter a number : ");
@@ -126,16 +140,6 @@ namespace HEXviewer
                                 }
                                 break;
                         }
-
-                        /*
-                        Console.Write("Enter byte number : ");
-                        long bn = 0;
-                        if (long.TryParse(Console.ReadLine(), out bn))
-                            if (bn < fs.Length && bn > -1)
-                            {
-
-                                k = bn;
-                            }*/
                     }
                 }
             }
@@ -178,7 +182,7 @@ namespace HEXviewer
                 Console.WriteLine(title);
                 for (int i = 0; i < items.Length; i++)
                 {
-                    Console.WriteLine((i==selected?"#":"")+items[i]+ (i == selected ? "#" :""));
+                    Console.WriteLine((i==selected?"\n#  ":"")+items[i]+ (i == selected ? "  #\n" :""));
                 }
             }
         }
