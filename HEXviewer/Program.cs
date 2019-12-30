@@ -53,12 +53,28 @@ namespace HEXviewer
                     for (int l = 0; l < Console.WindowHeight; l++)
                     {
                         Console.Write(fixSize((fs.Position+1).ToString(), 9)+":");
-                        for (int i = 0; i < 30; i++)
+                        byte[] by = new byte[30];
+                        int rl = fs.Length - 1 - fs.Position < 30 ? (int)(fs.Length - 1 - fs.Position) : 30;
+                        fs.Read(by, 0, rl);
+                        for (int i = 0; i < rl; i++)
                         {
-                            if (fs.Position < fs.Length)
-                                Console.Write(fixSize(hex[fs.ReadByte()], 3));
-                            else
-                                break;
+                                Console.Write(fixSize(hex[by[i]], 3));
+                        }
+                        if (Console.WindowWidth > 130)
+                        {
+                            Console.Write('|');
+                            switch (encMode)
+                            {
+                                case encodingMode.utf8:
+                                    Console.Write(UTF8Encoding.UTF8.GetString(by, 0, 30));
+                                    break;
+                                case encodingMode.utf16:
+                                    Console.Write(UnicodeEncoding.Unicode.GetString(by, 0, 30));
+                                    break;
+                                case encodingMode.ascii:
+                                    Console.Write(ASCIIEncoding.ASCII.GetString(by, 0, 30));
+                                    break;
+                            }
                         }
                         if (l < Console.WindowHeight - 1)
                             Console.WriteLine();
