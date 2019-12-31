@@ -66,13 +66,13 @@ namespace HEXviewer
                             switch (encMode)
                             {
                                 case encodingMode.utf8:
-                                    Console.Write(UTF8Encoding.UTF8.GetString(by, 0, 30));
+                                    Console.Write(replaceenter(UTF8Encoding.UTF8.GetString(by, 0, 30)));
                                     break;
                                 case encodingMode.utf16:
-                                    Console.Write(UnicodeEncoding.Unicode.GetString(by, 0, 30));
+                                    Console.Write(replaceenter(UnicodeEncoding.Unicode.GetString(by, 0, 30)));
                                     break;
                                 case encodingMode.ascii:
-                                    Console.Write(ASCIIEncoding.ASCII.GetString(by, 0, 30));
+                                    Console.Write(replaceenter(ASCIIEncoding.ASCII.GetString(by, 0, 30)));
                                     break;
                             }
                         }
@@ -182,6 +182,15 @@ namespace HEXviewer
                 System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
         }
+        static string replaceenter(string v)
+        {
+            string r="";
+            for(int i=0;i<v.Length;i++)
+            {
+                r += v[i] == '\n' || v[i] == '\r' ? ' ' : v[i];
+            }
+            return r;
+        }
         static string menu(string[] items,string title)
         {
             Console.Clear();
@@ -234,6 +243,23 @@ namespace HEXviewer
             while (s.Length < size)
                 s = " " + s;
             return s;
+        }
+    }
+    static class textBuffer
+    {
+        public static string txt;
+        public static void show()
+        {
+            Console.Write(txt);
+        }
+        public static void Write(string v)
+        {
+            txt += v;
+        }
+        public static void WriteLine(string v)
+        {
+            txt += v;
+            txt += '\n' ;
         }
     }
 }
