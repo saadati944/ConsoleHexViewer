@@ -38,7 +38,7 @@ namespace HEXviewer
                 } while (!File.Exists(fileName));
             }
             Console.Clear();
-            Console.Title = "press tab to open menu ,file name : " + fileName;
+            Console.Title = "H : help, file name : " + fileName;
             FileStream fs = new FileStream(fileName, FileMode.Open);
             if(fs.Length<=999999999)
             {
@@ -46,10 +46,9 @@ namespace HEXviewer
                 bool exit = false;
                 while (!exit)
                 {
-                    Console.Clear();
-                    Console.SetCursorPosition(0, 0);
                     //Console.Write(fixSize(k.ToString(), 9));
                     fs.Position = k;
+                    Console.Clear();
                     for (int l = 0; l < Console.WindowHeight; l++)
                     {
                         Console.Write(fixSize((fs.Position+1).ToString(), 9)+":");
@@ -58,7 +57,7 @@ namespace HEXviewer
                         fs.Read(by, 0, rl);
                         for (int i = 0; i < rl; i++)
                         {
-                                Console.Write(fixSize(hex[by[i]], 3));
+                            Console.Write(fixSize(hex[by[i]], 3));
                         }
                         if (Console.WindowWidth > 130)
                         {
@@ -195,9 +194,9 @@ namespace HEXviewer
         {
             Console.Clear();
             Console.WriteLine(title);
-            for (int i = 0; i < items.Length; i++)
-                Console.WriteLine(items[i]);
             int selected = 0;
+            for (int i = 0; i < items.Length; i++)
+                Console.WriteLine((i == selected ? "______________________________\n##  " : "") + items[i] + (i == selected ? "  ##\n______________________________" : ""));
             while (true)
             {
                 ConsoleKeyInfo ck = Console.ReadKey(true);
@@ -223,7 +222,7 @@ namespace HEXviewer
                 Console.WriteLine(title);
                 for (int i = 0; i < items.Length; i++)
                 {
-                    Console.WriteLine((i==selected?"\n#  ":"")+items[i]+ (i == selected ? "  #\n" :""));
+                    Console.WriteLine((i==selected?"______________________________\n##  ":"")+items[i]+ (i == selected ? "  ##\n______________________________" : ""));
                 }
             }
         }
@@ -243,23 +242,6 @@ namespace HEXviewer
             while (s.Length < size)
                 s = " " + s;
             return s;
-        }
-    }
-    static class textBuffer
-    {
-        public static string txt;
-        public static void show()
-        {
-            Console.Write(txt);
-        }
-        public static void Write(string v)
-        {
-            txt += v;
-        }
-        public static void WriteLine(string v)
-        {
-            txt += v;
-            txt += '\n' ;
         }
     }
 }
