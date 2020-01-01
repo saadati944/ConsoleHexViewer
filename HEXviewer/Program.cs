@@ -190,27 +190,43 @@ namespace HEXviewer
             }
             return r;
         }
-        static string menu(string[] items,string title)
+        static string emptyString(int len)
+        {
+            string s = "";
+            for (int i = 0; i < len; i++)
+                s += " ";
+            return s;
+        }
+        static int entersCount(string v)
+        {
+            int i = 0;
+            foreach (char x in v)
+                if (x == '\n')
+                    i++;
+            return i;
+        }
+        static string menu(string[] items, string title)
         {
             Console.Clear();
             Console.WriteLine(title);
-            int selected = 0;
+            int enterCount = entersCount(title) + 1;
+            int selected = 0, last = 0;
             for (int i = 0; i < items.Length; i++)
-                Console.WriteLine((i == selected ? "______________________________\n##  " : "") + items[i] + (i == selected ? "  ##\n______________________________" : ""));
+                Console.WriteLine((i == selected ? "  -->  " : "") + items[i] + (i == selected ? "  <--" : ""));
             while (true)
             {
                 ConsoleKeyInfo ck = Console.ReadKey(true);
                 if (ck.Key == ConsoleKey.DownArrow)
                 {
                     selected++;
-                    if (selected > items.Length-1)
+                    if (selected > items.Length - 1)
                         selected = 0;
                 }
                 else if (ck.Key == ConsoleKey.UpArrow)
                 {
                     selected--;
-                    if (selected <0)
-                        selected = items.Length-1;
+                    if (selected < 0)
+                        selected = items.Length - 1;
                 }
                 else if (ck.Key == ConsoleKey.Enter)
                 {
@@ -218,12 +234,16 @@ namespace HEXviewer
                         return "";
                     else return items[selected];
                 }
-                Console.Clear();
-                Console.WriteLine(title);
-                for (int i = 0; i < items.Length; i++)
+                if (selected != last)
                 {
-                    Console.WriteLine((i==selected?"______________________________\n##  ":"")+items[i]+ (i == selected ? "  ##\n______________________________" : ""));
+                    Console.SetCursorPosition(0, enterCount + last);
+                    Console.Write(emptyString(12 + items[last].Length));
+                    Console.SetCursorPosition(0, enterCount + last);
+                    Console.Write(items[last]);
+                    Console.SetCursorPosition(0, enterCount + selected);
+                    Console.Write("  -->  " + items[selected] + "  <--");
                 }
+                last = selected;
             }
         }
         static void createArray()
