@@ -35,6 +35,8 @@ namespace HEXviewer
                 {
                     Console.Write("Enter file name : ");
                     fileName = Console.ReadLine();
+                    if (fileName.StartsWith("'")|| fileName.StartsWith("\"")) fileName = fileName.Substring(1);
+                    if (fileName.EndsWith("'")|| fileName.EndsWith("\"")) fileName = fileName.Substring(0, fileName.Length - 1);
                 } while (!File.Exists(fileName));
             }
             Console.Clear();
